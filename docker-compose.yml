@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:11.2
+    environment:
+      POSTGRES_DB: 'encrypt'
+      POSTGRES_USER: 'encrypt'
+    ports:
+      - '5432:5432'

@@ -1,0 +1,24 @@
+spring:
+  main:
+    banner-mode: "OFF"
+  datasource:
+    url: jdbc:postgresql://${POSTGRESQL_HOST:localhost}:${POSTGRESQL_PORT:5432}/${POSTGRESQL_DB:encrypt}
+    username: ${POSTGRESQL_USER:encrypt}
+    password:
+    continue-on-error: true
+    hikari:
+      minimum-idle: 2
+      maximum-pool-size: 10
+      data-source-properties:
+        socketTimeout: 3000
+      leak-detection-threshold: 5000
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show_sql: false
+
+ekino:
+  encrypt:
+    secret: "my_very_long_secret_32_character"
+    iv: "initialization_V"
+

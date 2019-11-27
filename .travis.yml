@@ -1,0 +1,75 @@
+language: java
+install: true
+
+jdk:
+  - openjdk11
+
+env:
+  global:
+    - GPG_FILE_NAME="crypto.types.gpg"
+    - ENCRYPTED_GPG_FILE_NAME="crypto.types.gpg.enc"
+    - PUBLISH_SNAPSHOT_REPO_URL="https://oss.sonatype.org/content/repositories/snapshots/"
+    - PUBLISH_RELEASE_REPO_URL="https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+    # PUBLISH_REPO_USERNAME
+    - secure: "MRZnIrVMt79ob2BB/78qKgU1SqIU2w9Dti5CdHWc1oeD9ITHdmVWaDUnCFnqxE08q+JOUcTpZlZd5mbX3YH7hWa27b+Mh1YlgjfZNx6lVwCkwsAt1oCuENEqp+Rg7G4P6fl+AtIzNdDKquMs4hN4JKDUfF2KNKafKtbhYOZBLYY/e3EDupAptbuMKY4NZkUOC9PjJFfcT2x9zrjMrq36gCSRyYbl4WUdbGV4gdTWHwozi5e3+4ghmKJDFw/8tRTkBMMs1dVoJ6LZjZpXR2DNwaNmoC5G/FVJx0Dk47j786YsX1g0cHUN6FK3/u7QUoa1kiCtbyeedbbUOmm6y1l3wXszC5zAScrgxRyV9nHuVMJWesHeP59nGyo5ut0E69c1NBBiyCPacLQAyIF7BJCDeeZsXEzqcDPS7WvhScm/otQK6JobXnwthEEHBgmPy5iE4mF5fSV3pvv3sosQIBWFI/zELo0FCbuInz0xFX7+2T0LzTheGwOc/fiosLhC/XvFn8Qfjlf6QQ2Qmux/+hPcD6fO4TaprkcUVlcjcjPRF7mfRTsUC35G3RwUO8XJXyQ1afnvLa+41p98Sf2nhixqqwWGCPB8FMxzUrIRs6PDmUn2VmdffZ+eHDvByHazK7xhcwYKhPl0mqcGbpEe3owlcHijuqy69DsTGFq5GObRmyk="
+    # PUBLISH_REPO_PASSWORD
+    - secure: "CVMFl31ZQ4N1QM8lSthQqkFk1/mby0HZLqaHaHvfb0WUEr4dLjzI7AwFWOsoEUutiYdNhxPAunzkv2+lRjiwMqCsIvKByekYIY+81RKK6tS7t88o+McdEK9LQ4OSj736UUMBL0S4TvPLgMvRKud8YhVe4dB+hSguTQm3xSW43kCn9H54YulKyyuG2ebCIXC5v7+VomdlHs9PvXZ54wWkTqclB0JLzdAe4csOrEFvp7GTuCp0Ca9qq5aqhjqjevWh01Sa/Oev2VODeuRjf14oa1uHQ8pqIjM4UsAONCqVGmjWMkFmUMbIw/vhZECoP/2BE8VT9XuyIDc38IyCOqbB4P5GApYlmRGnkYm8M9kpg7yIEOQkXtEac5KY8uQObrZjPqh58YERS+TmkHED6H4pS/IXDwa+PdDKiLVKcShCrKRexS6gGmUW0qMsBWj+pquKcR5ZQbKo6YjPskIFe49HDk3UjYRnnbSWp8eiOx7/Q6/VN+vApF+oqk3eswKkzS20mi7765Sct4xFZ+cUMEN/iml8U79aKeGzg5SOeiwQ2xJqKbgf38G32+Yb2qMwf3RByYWmFnJlhdZU8x5YqxVqJvxT95eMAmVUgeHB/5FK0LcOTPTK6RqibS0X93a6FFuSNxuakd3lqS330jg6j4Fl0we6YOKlhaquqB2GV+CR/uM="
+    # GPG_KEY_ID
+    - secure: "XX09+qTPLzr2canYg/d7tQnVdFBOSwTweM8Zf2rA61/oaxILjG1DAfsq3W32qPWXdIZS096Ms8Dp5yDtDTTgYKyXXsBa6llQecw/LWNL/Qsiwj/yOyjF2HFyf+PrQxpyYtyLQZrm5cH2I5CjQD3oXKiJPVvqFFOWHrFI/ioVYP1uS/bm0Nv5MqFg9GnPck4gRU7eH79/5Ea8rVMKwvPX9jMzEkmcUc10Yip4nyXXzC++C5XLhKioMd03XWqwjI5Q3lvFKmJGxpCEgDeRyVdpyIJupYJPLjvERjxAMOs8S8N9ThhyEyHkzY0cUBnh5fnlfzk3Wa4v3brzF+mYV9JXUAJdXd8fRJC7NCgOqlN77mWpz3vjtuqTt393bMXZkd2Tihp2GvKxbPaRqYir2g6AGxDg+kNHKkqIFDUMNtoyFlRepPtOnnTanLI0J2uEMA9U7GlRS9V/alF6zCr1Vj/N0gsREgsOsz/lFH5wmFYx9HAKixrOBEWzKNEpDrFvgsrqsLfMRdjJNzKzUAZmHdR00ZVCj+XeRVYt8bBD4Lp9llpLI8kWuMLhLqSf2cesjjhLk2BHpDgNDc8SIi3dzMFg25HRNwPrTzAUIn5tB8Zf8JWC9j6/4nSWaBSvFUIFAbDnk41ls6F6MyOVEpuM/TRms7V2TL6BukWY3T6JMf6mUWM="
+    # GPG_PASSPHRASE
+    - secure: "njk4JzwPLal1SB4Rjz4TCbsIJQnbLCBjjNaEAXr0r6/DaRBZip8whtqn1dTIOCa41BVlSCzzFdYHCILFY5alBagLO1oUuFYMgY7yv4WoKg9wYVXyS8uNTvRNARye1DVt31A/HlSO4BlrHg/y3cIjE1AjdOnDBi4kVteAnMMj5C92XqNvU1PRkTf88y1jTbqkYzgReBnS0t2LeejhonjKEyUNW3ZjPo8O0RQVAveOtOUbuFBYn19wwPjoc11hGN6N9SLzvCXFKvAkShX+4q9USv2JvQFx8kSpYJxNXxaMtQRZZXca56CajknwX1jUO4HT+6LkAccY4AjUVXlgdlmGzgHTAtiVDX6OXmK9UjLP+mHP2cujQ4EFoWOI3vct8DU7dBFIyJ+Mfn3qgzYBZq7CYbJar8wByPqogEWLq9i0U2uWHYdNsinKMdndO89PXdaYd1HwV3U4dVkPJUosCZcWMs0VgjYaokNwVgJa6FQfvE5AySXx6aeq1IyXTkNxUXs0r7llXKcpPZMk/m9Wq8wb1I7pjxHYpwwKL7QWefVO8xAfdAx45Oes/OgL/WsSMH9vsvjEs8PCfuuloBMEod9Ht1QmjIobR7zgCfotxTnHeIp30IH+yGzeloAyQOuc0BsPS3i1JomYdo2kI1cNDqTqjh61RMs0J+p0VxnQGkTS1m0="
+
+before_install:
+  - sudo apt-get update
+  - sudo apt-get --yes remove postgresql\*
+  - sudo apt-get install -y postgresql-11 postgresql-client-11
+  - sudo cp /etc/postgresql/{9.6,11}/main/pg_hba.conf
+  - sudo service postgresql restart 11
+
+before_script:
+  - chmod -R ug+x .travis
+  - psql -c 'create database encrypt;' -U postgres
+  - psql -c 'create role encrypt LOGIN SUPERUSER;' -U postgres
+
+services:
+  - postgresql
+
+script: ".travis/build.sh"
+
+jobs:
+  include:
+    - stage: deploy
+      name: Deploy Snapshot
+      jdk: openjdk11
+      if: |
+        branch = master AND \
+        type = push
+      script: ".travis/deploy.sh"
+    - stage: deploy
+      name: Deploy Release
+      jdk: openjdk11
+      if: tag IS present AND tag =~ ^(\d)+\.(\d)+(\.(\d)+)*(-[\w]+)*$
+      script: ".travis/deploy.sh"
+      deploy:
+        provider: releases
+        api_key:
+          secure: KiSQmnLggzKMKmooQyvWwUJQcq6EGJ6DTt87QXgNvzkZ9KVlBiWHrFvuu2K+8gegRYBR6V2IMN5ll+O68CqfOBy68BMvH4c6PxOTLLYCbA9tL9Y+BvMV3SnNTwD2RILoZr7Wca1BJ+jMokr4OfWF/tntK70C9F6KXzRTYOAgZ1lgELiQ98hDLCAk1mKpubxsxYKBac4aJXsgzVcukeEOMnIy1c2HwdoaH/F0T7o5wRtvL/mAzg7ADHEXcbeac7latvMkJxxqOaNyNgDUiu7FhL0j6Bnrnlq5MP1cmCoEKhgxX5kEf+rCGaLY+/VVH95XsHAj0IRDm20sHqVFBl4O4uwPc32QE9SzziEyP3pz0nufBpe9X+szoMqvR9Dga2HlUhlwksBq/mUglDdt8awpWOfj1h6/Dxx8tyrgk/ov/i2WjhYqKjUxTF9vUCRHXei0rkKp375fMmuXS1agN4/QStQvpLfyLKYTACPzyHdiGTqXbaSsPDVqnGfcHUtisosBQaBFf7HbwF23xyJb5awoel/y9zCWRTLsue0yhJTZ2Du9DW65224cZS0JvLp9MztfEoeruOB3LPwlW1z1/yBV2K8kcgywc4T29ypZ04Zaae9L735jgn9SdxcwggYaD+NEKSLaNI7lb0IfwdhGNRJ53G/mE0gloc9dVLcuvtn2y/E=
+        file_glob: true
+        file: "$TRAVIS_BUILD_DIR/build/libs/*"
+        body: Release of $TRAVIS_TAG
+        skip_cleanup: true
+        draft: true
+        on:
+          repo: ekino/hibernate-crypto-types
+          tags: true
+
+addons:
+  postgresql: '11.2'
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -rf $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    - "$HOME/.gradle/caches/"
+    - "$HOME/.gradle/wrapper/"
