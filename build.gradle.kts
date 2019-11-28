@@ -6,8 +6,6 @@ plugins {
   `maven-publish`
   signing
 
-  id("org.springframework.boot") version "2.2.1.RELEASE"
-  id("io.spring.dependency-management") version "1.0.8.RELEASE"
   id("org.unbroken-dome.test-sets") version "2.1.1"
   id("com.ekino.oss.plugin.kotlin-quality") version "1.0.1"
 }
@@ -21,7 +19,8 @@ repositories {
 }
 
 dependencies {
-  compileOnly("org.hibernate:hibernate-core:5.4.8.Final")
+  implementation(platform("org.springframework.boot:spring-boot-dependencies:2.2.1.RELEASE")) // BOM import
+  compileOnly("org.hibernate:hibernate-core")
   implementation("com.vladmihalcea:hibernate-types-52:2.7.1")
 
   implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -62,14 +61,6 @@ tasks {
     dependsOn("integrationTest")
   }
 
-  bootJar {
-    enabled = false
-  }
-
-  jar {
-    enabled = true
-  }
-
   jacocoTestReport {
     executionData.from(file("$buildDir/jacoco/integrationTest.exec"))
   }
@@ -80,6 +71,10 @@ tasks {
       println(version)
     }
   }
+
+  withType<GenerateModuleMetadata> {
+    enabled = false
+  }
 }
 
 testSets {
@@ -87,6 +82,11 @@ testSets {
 }
 
 val publicationName = "mavenJava"
+
+java {
+  withJavadocJar()
+  withSourcesJar()
+}
 
 publishing {
   publications {
