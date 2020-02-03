@@ -1,5 +1,6 @@
 package com.ekino.oss.hibernate.model
 
+import com.ekino.oss.crypto.hibernate.EncryptedJsonSaltWrapType
 import com.ekino.oss.crypto.hibernate.EncryptedJsonType
 import com.ekino.oss.crypto.hibernate.EncryptedStringType
 import org.hibernate.annotations.TypeDef
@@ -15,7 +16,8 @@ import javax.persistence.MappedSuperclass
 @MappedSuperclass
 @TypeDefs(
   TypeDef(name = "encrypted-text", typeClass = EncryptedStringType::class),
-  TypeDef(name = "encrypted-json", typeClass = EncryptedJsonType::class)
+  TypeDef(name = "encrypted-json", typeClass = EncryptedJsonType::class),
+  TypeDef(name = "encrypted-json-salt-wrap", typeClass = EncryptedJsonSaltWrapType::class)
 )
 abstract class AbstractEntity(
   @Id

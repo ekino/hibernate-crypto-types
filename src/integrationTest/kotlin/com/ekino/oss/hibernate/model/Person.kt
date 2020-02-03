@@ -15,6 +15,10 @@ class Person(
 
   @Type(type = "encrypted-json")
   @Column(columnDefinition = "encrypted-json")
-  var privateData: PrivateData? = null
+  var privateData: PrivateData? = null,
+
+  @Type(type = "encrypted-json-salt-wrap")
+  @Column(columnDefinition = "encrypted-json-salt-wrap")
+  var someValue: SomeEnum? = null
 
 ) : AbstractEntity()
