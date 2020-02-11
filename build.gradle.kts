@@ -1,5 +1,5 @@
 plugins {
-  val kotlinVersion = "1.3.60"
+  val kotlinVersion = "1.3.61"
   kotlin("jvm") version kotlinVersion
   kotlin("plugin.spring") version kotlinVersion
   kotlin("plugin.jpa") version kotlinVersion
@@ -19,9 +19,9 @@ repositories {
 }
 
 dependencies {
-  implementation(platform("org.springframework.boot:spring-boot-dependencies:2.2.1.RELEASE")) // BOM import
+  implementation(platform("org.springframework.boot:spring-boot-dependencies:2.2.4.RELEASE"))
   compileOnly("org.hibernate:hibernate-core")
-  implementation("com.vladmihalcea:hibernate-types-52:2.7.1")
+  implementation("com.vladmihalcea:hibernate-types-52:2.9.3")
 
   implementation("org.jetbrains.kotlin:kotlin-reflect")
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
@@ -37,8 +37,8 @@ dependencies {
   }
   testRuntimeOnly("org.postgresql:postgresql")
   testImplementation("com.ekino.oss.jcv:jcv-core:1.4.2")
-  testImplementation("com.ekino.oss.jcv-db:jcv-db-jdbc:0.0.2")
-  testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.20")
+  testImplementation("com.ekino.oss.jcv-db:jcv-db-jdbc:0.0.4")
+  testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.21")
 }
 
 tasks {
