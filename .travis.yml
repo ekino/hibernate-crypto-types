@@ -1,3 +1,4 @@
+dist: xenial
 language: java
 install: true
 
@@ -20,14 +21,19 @@ env:
     - secure: Vil1HoI2pTyBJ+lRveUyFN3mibaMD3UPmvfS30dcpIWzZtwY/WjyAAPr26Wdd15XrIzDcbtzuY98DvkazgBEkb2EwKyTusgLgUtbb0YVzuM651C+pNA0u8j87Mq47TqbLS3tRYtwuXtftslSdz1xgeZ+un5zCP40i6Oy75Ct7y7zIpJ6Bh22p8D7r8nxFcBahXJ69D7UIe8chE0cJnFE8fj/+8fdingekUvK9a5EB10RSYHL48cetE0aboMQLqyLLIOXXDRgzTlE54zIiyxVQtZ1SznVUfIcQbbQoigkNXLf5E9YCdrKjnuXL1MiTk9qH9mv0BdClCGssXvzaku2K3SQsta5rv1UCPIAKO088xwv0g7l84vCnVnWrGlzwRd1+05/NbjMlUgxOG6BKt42/xXyVII3IKyIPDtvpYkimb4QjFZos+sAt4ySm0m7Ufr9cDAwqoAC62aFvOKlqzgLSydrmhx/P0YQHPVeLDgqSZNDfgw3YeTgxqCQcTb8z/qIxHW6zAQHSHa0+Tj3HXHxVCiyJiBGCGTrH83pqxs2YHJYafcFo6gKykFpRYlmSvHZaUDNmzNyvc5k6NBi6VZFK6uiwD/p2s9WCdxj3kCvl0ouAW3ni4YIWfSVlQu5XpZrhZnCP3CZkkcMJntLVgPCfn4fTyAyWjEt+Ys89wiIDBo=
 
 before_install:
-  - sudo apt-get update
+  - sudo service postgresql stop
   - sudo apt-get --yes remove postgresql\*
-  - sudo apt-get install -y postgresql-11 postgresql-client-11
-  - sudo cp /etc/postgresql/{9.6,11}/main/pg_hba.conf
+  - sudo apt install -yq --no-install-suggests --no-install-recommends postgresql-11 postgresql-client-11
+  - sed -e 's/^port.*/port = 5432/' /etc/postgresql/11/main/postgresql.conf > postgresql.conf
+  - sudo chown postgres postgresql.conf
+  - sudo mv postgresql.conf /etc/postgresql/11/main
+  - sudo cp /etc/postgresql/{10,11}/main/pg_hba.conf
   - sudo service postgresql restart 11
 
 before_script:
   - chmod -R ug+x .travis
+  - export PATH="/usr/lib/postgresql/11/bin:$PATH"
+  - psql --version
   - psql -c 'create database encrypt;' -U postgres
   - psql -c 'create role encrypt LOGIN SUPERUSER;' -U postgres
 
