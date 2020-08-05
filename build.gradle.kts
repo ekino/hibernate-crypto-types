@@ -1,13 +1,13 @@
 plugins {
-  val kotlinVersion = "1.3.61"
+  val kotlinVersion = "1.3.72"
   kotlin("jvm") version kotlinVersion
   kotlin("plugin.spring") version kotlinVersion
   kotlin("plugin.jpa") version kotlinVersion
   `maven-publish`
   signing
 
-  id("org.unbroken-dome.test-sets") version "2.1.1"
-  id("com.ekino.oss.plugin.kotlin-quality") version "1.0.1"
+  id("org.unbroken-dome.test-sets") version "3.0.1"
+  id("com.ekino.oss.plugin.kotlin-quality") version "2.0.0"
 }
 
 group = "com.ekino.oss.crypto"
@@ -16,6 +16,7 @@ java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
   mavenCentral()
+  jcenter()
 }
 
 dependencies {
@@ -38,15 +39,15 @@ dependencies {
   testRuntimeOnly("org.postgresql:postgresql")
   testImplementation("com.ekino.oss.jcv:jcv-core:1.4.2")
   testImplementation("com.ekino.oss.jcv-db:jcv-db-jdbc:0.0.4")
-  testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.21")
+  testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.22")
 }
 
 tasks {
   withType<Test>().configureEach {
     useJUnitPlatform()
     jvmArgs(
-        "-Dspring.test.constructor.autowire.mode=ALL",
-        "-Duser.language=en"
+      "-Dspring.test.constructor.autowire.mode=ALL",
+      "-Duser.language=en"
     )
   }
 
