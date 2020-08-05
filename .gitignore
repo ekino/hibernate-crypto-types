@@ -26,3 +26,6 @@
 /dist/
 /nbdist/
 /.nb-gradle/
+
+### JENV ###
+.java-version
