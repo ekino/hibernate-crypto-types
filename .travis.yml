@@ -34,10 +34,11 @@ before_script:
 services:
   - postgresql
 
-script: ".travis/build.sh"
-
 jobs:
   include:
+    - stage: test
+      name: Build
+      script: ".travis/build.sh"
     - stage: deploy
       name: Deploy Snapshot
       jdk: openjdk11
