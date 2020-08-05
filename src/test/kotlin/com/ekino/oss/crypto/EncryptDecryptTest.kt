@@ -1,12 +1,10 @@
-package com.ekino.oss.hibernate
+package com.ekino.oss.crypto
 
 import assertk.assertThat
 import assertk.assertions.hasMessage
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFailure
 import assertk.assertions.isInstanceOf
-import com.ekino.oss.crypto.EncryptCredentialsHolder
-import com.ekino.oss.crypto.EncryptDecrypt
 import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
@@ -19,9 +17,9 @@ internal class EncryptDecryptTest {
   @Order(1)
   internal fun `should fail to encrypt without secret`() {
     assertThat { EncryptDecrypt.encrypt("test") }
-        .isFailure()
-        .isInstanceOf(IllegalArgumentException::class.java)
-        .hasMessage("SECRET has to be initialized")
+      .isFailure()
+      .isInstanceOf(IllegalArgumentException::class.java)
+      .hasMessage("SECRET has to be initialized")
   }
 
   @Test
@@ -30,9 +28,9 @@ internal class EncryptDecryptTest {
     EncryptCredentialsHolder.SECRET = "my_very_long_secret_32_character"
 
     assertThat { EncryptDecrypt.encrypt("test") }
-        .isFailure()
-        .isInstanceOf(IllegalArgumentException::class.java)
-        .hasMessage("IV key has to be initialized")
+      .isFailure()
+      .isInstanceOf(IllegalArgumentException::class.java)
+      .hasMessage("IV key has to be initialized")
   }
 
   @Test

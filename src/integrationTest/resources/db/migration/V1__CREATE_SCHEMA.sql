@@ -4,5 +4,6 @@ CREATE TABLE person
     name               TEXT,
     password           TEXT,
     private_data       TEXT,
-    some_value         TEXT
+    some_value         TEXT,
+    simple_value       TEXT
 );

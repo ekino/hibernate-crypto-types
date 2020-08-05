@@ -1,6 +1,8 @@
 package com.ekino.oss.hibernate
 
+import assertk.all
 import assertk.assertThat
+import assertk.assertions.doesNotContain
 import assertk.assertions.hasSameSizeAs
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotNull
@@ -22,8 +24,8 @@ internal class PersonRepositoryTest(
 ) {
 
   private val dBComparatorBuilder = DBComparatorBuilder
-      .create()
-      .connection(jdbcTemplate.dataSource!!.connection)
+    .create()
+    .connection(jdbcTemplate.dataSource!!.connection)
 
   @BeforeEach
   internal fun setUp() = jdbcTemplate.truncateAll()
@@ -35,21 +37,25 @@ internal class PersonRepositoryTest(
     val fetchEntity = personRepository.findByIdOrNull(saveEntity.id!!)
 
     assertThat(fetchEntity)
-        .isNotNull()
-        .transform { it.password }
-        .isEqualTo("12345")
+      .isNotNull()
+      .transform { it.password }
+      .isEqualTo("12345")
 
     dBComparatorBuilder
-        .build("select * from person")
-        .isValidAgainst("""
+      .build("select * from person")
+      .isValidAgainst(
+        //language=JSON
+        """
           [{
             "id": "{#uuid#}",
             "name": "test",
             "password": "WZk6Copy\/bLwLVQpLY7DCQ==",
             "private_data": null,
-            "some_value": null
+            "some_value": null,
+            "simple_value": null
           }]
-        """)
+        """
+      )
   }
 
   @Test
@@ -59,21 +65,25 @@ internal class PersonRepositoryTest(
     val fetchEntity = personRepository.findByIdOrNull(saveEntity.id!!)
 
     assertThat(fetchEntity)
-        .isNotNull()
-        .transform { it.privateData }
-        .isEqualTo(privateData)
+      .isNotNull()
+      .transform { it.privateData }
+      .isEqualTo(privateData)
 
     dBComparatorBuilder
-        .build("select * from person")
-        .isValidAgainst("""
+      .build("select * from person")
+      .isValidAgainst(
+        //language=JSON
+        """
           [{
             "id": "{#uuid#}",
             "name": "test",
             "password": null,
             "private_data": "v+HbP1s+jxoztxFKa82EGXBCbwhVmxmpVLJbwm4\/LsSSen08M7XwY8nksISGaCkY",
-            "some_value": null
+            "some_value": null,
+            "simple_value": null
           }]
-        """)
+        """
+      )
   }
 
   @Test
@@ -85,41 +95,114 @@ internal class PersonRepositoryTest(
     val fetchEntity2 = personRepository.findByIdOrNull(savedEntity2.id!!)
 
     assertThat(fetchEntity1)
-        .isNotNull()
-        .transform { it.someValue }
-        .isEqualTo(SomeEnum.VALUE_1)
+      .isNotNull()
+      .transform { it.someValue }
+      .isEqualTo(SomeEnum.VALUE_1)
 
     assertThat(fetchEntity2)
-        .isNotNull()
-        .transform { it.someValue }
-        .isEqualTo(SomeEnum.VALUE_1)
+      .isNotNull()
+      .transform { it.someValue }
+      .isEqualTo(SomeEnum.VALUE_1)
 
     dBComparatorBuilder
-        .build("select * from person")
-        .isValidAgainst("""
+      .build("select * from person")
+      .isValidAgainst(
+        //language=JSON
+        """
           [{
             "id": "{#uuid#}",
             "name": "test1",
             "password": null,
             "private_data": null,
-            "some_value": "{#not_empty#}"
+            "some_value": "{#not_empty#}",
+            "simple_value": null
           }, {
             "id": "{#uuid#}",
             "name": "test2",
             "password": null,
             "private_data": null,
-            "some_value": "{#not_empty#}"
+            "some_value": "{#not_empty#}",
+            "simple_value": null
           }]
-        """)
+        """
+      )
 
     val someValueResults = jdbcTemplate.queryForList("select some_value from person", String::class.java)
     assertThat(someValueResults).hasSameSizeAs(someValueResults.distinct())
+  }
+
+  @Test
+  internal fun `encrypt and decrypt simple string values with salt`() {
+    val commonPassword = "12345"
+    val commonSimpleValue = "Hello"
+    val savedEntity1 = personRepository.save(
+      Person(
+        name = "test1",
+        password = commonPassword,
+        simpleValue = commonSimpleValue
+      )
+    )
+    val fetchEntity1 = personRepository.findByIdOrNull(savedEntity1.id!!)
+
+    val savedEntity2 = personRepository.save(
+      Person(
+        name = "test2",
+        password = commonPassword,
+        simpleValue = commonSimpleValue
+      )
+    )
+    val fetchEntity2 = personRepository.findByIdOrNull(savedEntity2.id!!)
+
+    assertThat(fetchEntity1)
+      .isNotNull()
+      .all {
+        transform { it.password }.isEqualTo(commonPassword)
+        transform { it.simpleValue }.isEqualTo(commonSimpleValue)
+      }
+
+    assertThat(fetchEntity2)
+      .isNotNull()
+      .all {
+        transform { it.password }.isEqualTo(commonPassword)
+        transform { it.simpleValue }.isEqualTo(commonSimpleValue)
+      }
+
+    dBComparatorBuilder
+      .build("select * from person")
+      .isValidAgainst(
+        //language=JSON
+        """
+          [{
+            "id": "{#uuid#}",
+            "name": "test1",
+            "password": "WZk6Copy\/bLwLVQpLY7DCQ==",
+            "private_data": null,
+            "some_value": null,
+            "simple_value": "{#not_empty#}"
+          }, {
+            "id": "{#uuid#}",
+            "name": "test2",
+            "password": "WZk6Copy\/bLwLVQpLY7DCQ==",
+            "private_data": null,
+            "some_value": null,
+            "simple_value": "{#not_empty#}"
+          }]
+        """
+      )
+
+    val simpleValueResults = jdbcTemplate.queryForList("select simple_value from person", String::class.java)
+    assertThat(simpleValueResults)
+      .hasSameSizeAs(simpleValueResults.distinct())
+    simpleValueResults.forEach { value ->
+      assertThat(value).doesNotContain(commonSimpleValue)
+    }
   }
 }
 
 fun JdbcTemplate.truncateAll() {
   val tables = this.queryForList(
-      "SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename != 'flyway_schema_history';", String::class.java)
+    "SELECT tablename FROM pg_tables WHERE schemaname = 'public' AND tablename != 'flyway_schema_history';", String::class.java
+  )
 
   tables.forEach { table ->
     this.execute("set session_replication_role = replica;")
