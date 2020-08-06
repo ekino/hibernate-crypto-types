@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "com.ekino.oss.crypto"
-version = "1.2.0-SNAPSHOT"
+version = "1.2.0"
 java.sourceCompatibility = JavaVersion.VERSION_11
 
 repositories {
