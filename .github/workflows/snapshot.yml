@@ -1,0 +1,58 @@
+name: Publish snapshot
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      PG_PASSWORD: encrypt_pwd
+    services:
+      postgres:
+        # Docker Hub image
+        image: postgres:11.9
+        env:
+          POSTGRES_DB: encrypt
+          POSTGRES_USER: encrypt
+          POSTGRES_PASSWORD: ${{ env.PG_PASSWORD }}
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5432:5432
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup java
+        uses: actions/setup-java@v1.4.1
+        with:
+          java-version: 11
+      - name: Check version is snapshot
+        run: |
+          PROJECT_VERSION=$(./gradlew -q printVersion | tail -n 1)
+          echo "Project version is $PROJECT_VERSION"
+          if [[ "$PROJECT_VERSION" != *"SNAPSHOT" ]]; then exit 1; fi
+      - name: Decrypt large secret
+        run: |
+          chmod +x ./.github/workflows/decrypt_secret.sh
+          ./.github/workflows/decrypt_secret.sh
+        env:
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+      - name: Build
+        run: ./gradlew build
+        env:
+          POSTGRESQL_PASSWORD: ${{ env.PG_PASSWORD }}
+      - name: Publish
+        run: ./gradlew publish -PossrhUrl="$PUBLISH_SNAPSHOT_REPO_URL" -PossrhUsername="$PUBLISH_REPO_USERNAME" -PossrhPassword="$PUBLISH_REPO_PASSWORD" -Psigning.keyId="$GPG_KEY_ID" -Psigning.password="$GPG_PASSPHRASE" -Psigning.secretKeyRingFile="$SIGN_FILE_PATH"
+        env:
+          PUBLISH_SNAPSHOT_REPO_URL: https://oss.sonatype.org/content/repositories/snapshots/
+          PUBLISH_REPO_USERNAME: ${{ secrets.SONATYPE_OSS_USERNAME }}
+          PUBLISH_REPO_PASSWORD: ${{ secrets.SONATYPE_OSS_PASSWORD }}
+          GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          SIGN_FILE_PATH: .github/workflows/crypto.types.gpg
