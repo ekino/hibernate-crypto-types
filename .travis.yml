@@ -42,16 +42,19 @@ services:
 
 jobs:
   include:
-    - stage: test
-      name: Build
-      script: ".travis/build.sh"
-    - stage: deploy
-      name: Deploy Snapshot
-      jdk: openjdk11
-      if: |
-        branch = master AND \
-        type = push
-      script: ".travis/deploy.sh"
+#    - stage: test
+#      name: Build
+#      script: ".travis/build.sh"
+#      if: |
+#        branch = master AND \
+#        type = push
+#    - stage: deploy
+#      name: Deploy Snapshot
+#      jdk: openjdk11
+#      if: |
+#        branch = master AND \
+#        type = push
+#      script: ".travis/deploy.sh"
     - stage: deploy
       name: Deploy Release
       jdk: openjdk11

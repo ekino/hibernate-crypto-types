@@ -4,7 +4,7 @@ spring:
   datasource:
     url: jdbc:postgresql://${POSTGRESQL_HOST:localhost}:${POSTGRESQL_PORT:5432}/${POSTGRESQL_DB:encrypt}
     username: ${POSTGRESQL_USER:encrypt}
-    password:
+    password: ${POSTGRESQL_PASSWORD:}
     continue-on-error: true
     hikari:
       minimum-idle: 2

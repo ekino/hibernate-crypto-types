@@ -1,0 +1,60 @@
+name: Build branch
+on:
+  schedule:
+    - cron: "0 5 * * 1" # every monday at 5 am
+  pull_request:
+  push:
+    branches:
+      - "*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        java: [ 11 ]
+    name: Java ${{ matrix.java }}
+    env:
+      PG_PASSWORD: encrypt_pwd
+    services:
+      postgres:
+        # Docker Hub image
+        image: postgres:11.9
+        env:
+          POSTGRES_DB: encrypt
+          POSTGRES_USER: encrypt
+          POSTGRES_PASSWORD: ${{ env.PG_PASSWORD }}
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5432:5432
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup java
+        uses: actions/setup-java@v1.4.1
+        with:
+          java-version: ${{ matrix.java }}
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-caches-${{ hashFiles('build.gradle.kts') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-caches-
+      - name: Cache wrapper
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-wrapper-
+      - name: Build
+        run: ./gradlew build
+        env:
+          POSTGRESQL_PASSWORD: ${{ env.PG_PASSWORD }}
