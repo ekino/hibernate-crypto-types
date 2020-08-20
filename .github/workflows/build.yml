@@ -19,6 +19,7 @@ jobs:
         # Docker Hub image
         image: postgres:11.9
         env:
+          POSTGRES_DB: encrypt
           POSTGRES_USER: encrypt
           POSTGRES_PASSWORD: ${{ env.PG_PASSWORD }}
         # Set health checks to wait until postgres has started
