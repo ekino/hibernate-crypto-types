@@ -45,6 +45,9 @@ jobs:
     - stage: test
       name: Build
       script: ".travis/build.sh"
+      if: |
+        branch = master AND \
+        type = push
     - stage: deploy
       name: Deploy Snapshot
       jdk: openjdk11
