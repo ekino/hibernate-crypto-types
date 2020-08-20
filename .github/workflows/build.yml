@@ -12,12 +12,15 @@ jobs:
       matrix:
         java: [ 11 ]
     name: Java ${{ matrix.java }}
+    env:
+      PG_PASSWORD: encrypt_pwd
     services:
       postgres:
         # Docker Hub image
         image: postgres:11.9
         env:
           POSTGRES_USER: encrypt
+          POSTGRES_PASSWORD: ${{ env.PG_PASSWORD }}
         # Set health checks to wait until postgres has started
         options: >-
           --health-cmd pg_isready
@@ -46,3 +49,5 @@ jobs:
             ${{ runner.os }}-gradle-wrapper-
       - name: Build
         run: ./gradlew build
+        env:
+          POSTGRESQL_PASSWORD: ${{ env.PG_PASSWORD }}
