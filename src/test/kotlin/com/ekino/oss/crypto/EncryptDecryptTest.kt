@@ -1,20 +1,34 @@
 package com.ekino.oss.crypto
 
+import assertk.all
 import assertk.assertThat
+import assertk.assertions.containsOnly
 import assertk.assertions.hasMessage
+import assertk.assertions.hasSize
 import assertk.assertions.isEqualTo
 import assertk.assertions.isFailure
 import assertk.assertions.isInstanceOf
-import org.junit.jupiter.api.MethodOrderer
-import org.junit.jupiter.api.Order
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestMethodOrder
+import java.util.concurrent.Callable
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.Executors
 
-@TestMethodOrder(value = MethodOrderer.OrderAnnotation::class)
+private const val sampleSecret = "my_very_long_secret_32_character"
+private const val sampleIV = "initialization_V"
+
+private const val sampleDecryptedValue = "value"
+private const val sampleEncryptedValue = "SNtsQLpTO09uM81PsRc7rA=="
+
 internal class EncryptDecryptTest {
+  @BeforeEach
+  @AfterEach
+  internal fun resetCredentials() {
+    EncryptCredentialsHolder.reset()
+  }
 
   @Test
-  @Order(1)
   internal fun `should fail to encrypt without secret`() {
     assertThat { EncryptDecrypt.encrypt("test") }
       .isFailure()
@@ -23,9 +37,8 @@ internal class EncryptDecryptTest {
   }
 
   @Test
-  @Order(2)
   internal fun `should fail to encrypt without iv`() {
-    EncryptCredentialsHolder.SECRET = "my_very_long_secret_32_character"
+    EncryptCredentialsHolder.SECRET = sampleSecret
 
     assertThat { EncryptDecrypt.encrypt("test") }
       .isFailure()
@@ -34,16 +47,68 @@ internal class EncryptDecryptTest {
   }
 
   @Test
-  @Order(3)
   internal fun `should encrypt string`() {
-    EncryptCredentialsHolder.IV = "initialization_V"
+    EncryptCredentialsHolder.init()
 
-    assertThat(EncryptDecrypt.encrypt("value")).isEqualTo("SNtsQLpTO09uM81PsRc7rA==")
+    assertThat(EncryptDecrypt.encrypt(sampleDecryptedValue)).isEqualTo(sampleEncryptedValue)
   }
 
   @Test
-  @Order(4)
   internal fun `should decrypt string`() {
-    assertThat(EncryptDecrypt.decrypt("SNtsQLpTO09uM81PsRc7rA==")).isEqualTo("value")
+    EncryptCredentialsHolder.init()
+    assertThat(EncryptDecrypt.decrypt(sampleEncryptedValue)).isEqualTo(sampleDecryptedValue)
+  }
+
+  @Test
+  internal fun `should thread safely encrypt string`() {
+    EncryptCredentialsHolder.init()
+
+    val threadCount = 100
+    val results = runInThreads(threadCount) {
+      EncryptDecrypt.encrypt(sampleDecryptedValue)
+    }
+    assertThat(results).all {
+      hasSize(threadCount)
+      containsOnly(sampleEncryptedValue)
+    }
+  }
+
+  @Test
+  internal fun `should thread safely decrypt string`() {
+    EncryptCredentialsHolder.init()
+
+    val threadCount = 100
+    val results = runInThreads(threadCount) {
+      EncryptDecrypt.decrypt(sampleEncryptedValue)
+    }
+    assertThat(results).all {
+      hasSize(threadCount)
+      containsOnly(sampleDecryptedValue)
+    }
+  }
+
+  @Suppress("SameParameterValue")
+  private fun <T> runInThreads(threadCount: Int, block: (threadIndex: Int) -> T): List<T> {
+    val latch = CountDownLatch(1)
+    val executorService = Executors.newFixedThreadPool(threadCount)
+    val futures = (1..threadCount).map {
+      Callable {
+        latch.await()
+        block(it)
+      }
+    }
+      .map { executorService.submit(it) }
+    latch.countDown()
+    return futures.map { it.get() }
+  }
+
+  private fun EncryptCredentialsHolder.reset() {
+    SECRET = null
+    IV = null
+  }
+
+  private fun EncryptCredentialsHolder.init() {
+    SECRET = sampleSecret
+    IV = sampleIV
   }
 }

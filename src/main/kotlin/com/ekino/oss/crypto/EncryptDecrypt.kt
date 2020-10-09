@@ -31,13 +31,15 @@ object EncryptDecrypt {
 
   @Throws(GeneralSecurityException::class)
   fun encrypt(toBeEncrypt: String): String {
-    val encrypted = encrypter.doFinal(toBeEncrypt.toByteArray())
+    val toBeEncryptedBytes = toBeEncrypt.toByteArray()
+    val encrypted = synchronized(encrypter) { encrypter.doFinal(toBeEncryptedBytes) }
     return Base64.getEncoder().encodeToString(encrypted)
   }
 
   @Throws(GeneralSecurityException::class)
   fun decrypt(encrypted: String): String {
-    val decryptedBytes = decrypter.doFinal(Base64.getDecoder().decode(encrypted))
+    val encryptedBytes = Base64.getDecoder().decode(encrypted)
+    val decryptedBytes = synchronized(decrypter) { decrypter.doFinal(encryptedBytes) }
     return String(decryptedBytes)
   }
 }
