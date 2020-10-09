@@ -16,7 +16,7 @@ JDK 8+
 For example with Gradle Kotlin DSL :
 
 ```kotlin
-implementation("com.ekino.oss.crypto:hibernate-crypto-types:1.3.0-SNAPSHOT")
+implementation("com.ekino.oss.crypto:hibernate-crypto-types:1.2.1")
 ```
 
 NB : if you want to use snapshots you need to add the following configuration to your Gradle build script :
