@@ -6,7 +6,7 @@ plugins {
   `maven-publish`
   signing
 
-  id("org.unbroken-dome.test-sets") version "3.0.1"
+  id("org.unbroken-dome.test-sets") version "4.0.0"
   id("com.ekino.oss.plugin.kotlin-quality") version "3.0.0"
 }
 
