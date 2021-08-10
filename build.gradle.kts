@@ -7,7 +7,7 @@ plugins {
   signing
 
   id("org.unbroken-dome.test-sets") version "3.0.1"
-  id("com.ekino.oss.plugin.kotlin-quality") version "2.0.0"
+  id("com.ekino.oss.plugin.kotlin-quality") version "3.0.0"
 }
 
 group = "com.ekino.oss.crypto"
