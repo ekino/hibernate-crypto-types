@@ -9,7 +9,7 @@ Library adding custom encrypted hibernate types
 
 ## Requirements
 
-JDK 8+
+JDK 11+
 
 ## Installation
 
