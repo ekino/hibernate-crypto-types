@@ -1,5 +1,5 @@
 plugins {
-  val kotlinVersion = "1.3.72"
+  val kotlinVersion = "1.5.21"
   kotlin("jvm") version kotlinVersion
   kotlin("plugin.spring") version kotlinVersion
   kotlin("plugin.jpa") version kotlinVersion
@@ -62,6 +62,7 @@ tasks {
   }
 
   jacocoTestReport {
+    dependsOn("integrationTest")
     executionData.from(file("$buildDir/jacoco/integrationTest.exec"))
   }
 
