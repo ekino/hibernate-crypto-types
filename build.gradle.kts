@@ -19,7 +19,7 @@ repositories {
 }
 
 dependencies {
-  implementation(platform("org.springframework.boot:spring-boot-dependencies:2.5.6"))
+  implementation(platform("org.springframework.boot:spring-boot-dependencies:2.6.0"))
   compileOnly("org.hibernate:hibernate-core")
   implementation("com.vladmihalcea:hibernate-types-52:2.14.0")
 
