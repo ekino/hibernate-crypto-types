@@ -15,11 +15,11 @@ import java.util.concurrent.Callable
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 
-private const val sampleSecret = "my_very_long_secret_32_character"
-private const val sampleIV = "initialization_V"
+private const val SAMPLE_SECRET = "my_very_long_secret_32_character"
+private const val SAMPLE_IV = "initialization_V"
 
-private const val sampleDecryptedValue = "value"
-private const val sampleEncryptedValue = "SNtsQLpTO09uM81PsRc7rA=="
+private const val SAMPLE_DECRYPTED_VALUE = "value"
+private const val SAMPLE_ENCRYPTED_VALUE = "SNtsQLpTO09uM81PsRc7rA=="
 
 internal class EncryptDecryptTest {
   @BeforeEach
@@ -38,7 +38,7 @@ internal class EncryptDecryptTest {
 
   @Test
   internal fun `should fail to encrypt without iv`() {
-    EncryptCredentialsHolder.SECRET = sampleSecret
+    EncryptCredentialsHolder.SECRET = SAMPLE_SECRET
 
     assertThat { EncryptDecrypt.encrypt("test") }
       .isFailure()
@@ -50,13 +50,13 @@ internal class EncryptDecryptTest {
   internal fun `should encrypt string`() {
     EncryptCredentialsHolder.init()
 
-    assertThat(EncryptDecrypt.encrypt(sampleDecryptedValue)).isEqualTo(sampleEncryptedValue)
+    assertThat(EncryptDecrypt.encrypt(SAMPLE_DECRYPTED_VALUE)).isEqualTo(SAMPLE_ENCRYPTED_VALUE)
   }
 
   @Test
   internal fun `should decrypt string`() {
     EncryptCredentialsHolder.init()
-    assertThat(EncryptDecrypt.decrypt(sampleEncryptedValue)).isEqualTo(sampleDecryptedValue)
+    assertThat(EncryptDecrypt.decrypt(SAMPLE_ENCRYPTED_VALUE)).isEqualTo(SAMPLE_DECRYPTED_VALUE)
   }
 
   @Test
@@ -65,11 +65,11 @@ internal class EncryptDecryptTest {
 
     val threadCount = 100
     val results = runInThreads(threadCount) {
-      EncryptDecrypt.encrypt(sampleDecryptedValue)
+      EncryptDecrypt.encrypt(SAMPLE_DECRYPTED_VALUE)
     }
     assertThat(results).all {
       hasSize(threadCount)
-      containsOnly(sampleEncryptedValue)
+      containsOnly(SAMPLE_ENCRYPTED_VALUE)
     }
   }
 
@@ -79,11 +79,11 @@ internal class EncryptDecryptTest {
 
     val threadCount = 100
     val results = runInThreads(threadCount) {
-      EncryptDecrypt.decrypt(sampleEncryptedValue)
+      EncryptDecrypt.decrypt(SAMPLE_ENCRYPTED_VALUE)
     }
     assertThat(results).all {
       hasSize(threadCount)
-      containsOnly(sampleDecryptedValue)
+      containsOnly(SAMPLE_DECRYPTED_VALUE)
     }
   }
 
@@ -108,7 +108,7 @@ internal class EncryptDecryptTest {
   }
 
   private fun EncryptCredentialsHolder.init() {
-    SECRET = sampleSecret
-    IV = sampleIV
+    SECRET = SAMPLE_SECRET
+    IV = SAMPLE_IV
   }
 }
