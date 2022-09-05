@@ -37,7 +37,7 @@ dependencies {
   }
   testRuntimeOnly("org.postgresql:postgresql")
   testImplementation("com.ekino.oss.jcv:jcv-core:1.5.0")
-  testImplementation("com.ekino.oss.jcv-db:jcv-db-jdbc:0.0.4")
+  testImplementation("com.ekino.oss.jcv-db:jcv-db-jdbc:0.0.5")
   testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
 }
 
