@@ -21,7 +21,7 @@ repositories {
 dependencies {
   implementation(platform("org.springframework.boot:spring-boot-dependencies:2.7.3"))
   compileOnly("org.hibernate:hibernate-core")
-  implementation("com.vladmihalcea:hibernate-types-52:2.19.0")
+  implementation("com.vladmihalcea:hibernate-types-52:2.19.2")
 
   implementation("org.jetbrains.kotlin:kotlin-reflect")
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
